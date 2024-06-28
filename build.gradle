@@ -1,0 +1,28 @@
+import io.mateo.cxf.codegen.wsdl2java.Wsdl2Java
+
+plugins {
+    id "java"
+    id("io.mateo.cxf-codegen") version "2.4.0"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'jakarta.jws:jakarta.jws-api:3.0.0'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    implementation 'jakarta.xml.ws:jakarta.xml.ws-api:4.0.2'
+}
+
+
+tasks.register("generateByWsdl", Wsdl2Java) {
+    toolOptions {
+        wsdl.set(file("src/main/resources/weather.wsdl").toPath().toAbsolutePath().toString())
+        outputDir.set(file("$buildDir/generated-java"))
+        outputDir.set(file("src/main/java"))
+        packageNames.set(['ru.wsdl2java.generated'])
+    }
+}
+
+compileJava.dependsOn generateByWsdl
